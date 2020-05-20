@@ -1,0 +1,23 @@
+sudo: required
+services:
+  - docker
+
+# Test client (React app)
+before_install:
+  - docker build -t neild2142/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true neild2142/react-test npm test
+
+# Build prod
+after_succeess:
+  - docker build -t neild2142/multi-client ./client
+  - docker build -t neild2142/multi-nginx ./nginx
+  - docker build -t neild2142/multi-server ./server
+  - docker build -t neild2142/multi-worker ./worker
+  # Log in to docker cli
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push neild2142/multi-client
+  - docker push neild2142/multi-nginx
+  - docker push neild2142/multi-server
+  - docker push neild2142/multi-worker
