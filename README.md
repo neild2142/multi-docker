@@ -6,7 +6,7 @@
 
 ## Redis
 
-- `docker exec -it b922 redis-cli`
+- `docker exec -it <id> redis-cli`
 - `hgetall seen`
 
 ## Postgresql
